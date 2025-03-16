@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Weight Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fish Weight Prediction</h1>
+        <input type="number" id="length1" placeholder="Length1 (cm)">
+        <input type="number" id="length2" placeholder="Length2 (cm)">
+        <input type="number" id="length3" placeholder="Length3 (cm)">
+        <input type="number" id="height" placeholder="Height (cm)">
+        <input type="number" id="width" placeholder="Width (cm)">
+        <button onclick="predictWeight()">Predict Weight</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function predictWeight() {
+            const length1 = document.getElementById('length1').value;
+            const length2 = document.getElementById('length2').value;
+            const length3 = document.getElementById('length3').value;
+            const height = document.getElementById('height').value;
+            const width = document.getElementById('width').value;
+
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    Length1: parseFloat(length1),
+                    Length2: parseFloat(length2),
+                    Length3: parseFloat(length3),
+                    Height: parseFloat(height),
+                    Width: parseFloat(width),
+                }),
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = `Predicted Weight: ${data.predicted_weight.toFixed(2)} grams`;
+        }
+    </script>
+</body>
+</html>
